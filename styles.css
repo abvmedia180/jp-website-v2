@@ -193,3 +193,27 @@ footer{background:var(--cream);padding:64px 0 32px;border-top:1px solid rgba(15,
   .footer-bottom{flex-direction:column;gap:12px;text-align:center}
   .page-hero{padding:130px 0 60px}
 }
+
+/* ==================== FLOATING BOOK BUTTON OVERRIDES ==================== */
+/* Shrink Cal.com floating button on mobile for less intrusion */
+@media(max-width:768px){
+  [data-cal-namespace="10min"] {
+    transform: scale(0.85);
+    transform-origin: bottom right;
+  }
+}
+/* Smooth fade transition for scroll-based show/hide */
+[data-cal-namespace="10min"] {
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease !important;
+}
+[data-cal-namespace="10min"].cal-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(20px) scale(0.85) !important;
+}
+@media(min-width:769px){
+  [data-cal-namespace="10min"].cal-hidden {
+    transform: translateY(20px) !important;
+  }
+}

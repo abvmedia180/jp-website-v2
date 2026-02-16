@@ -44,3 +44,46 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   });
 });
+
+// Smart floating Book button — hide when hero CTA is visible, show after scroll
+(function() {
+  function getCalButton() {
+    // Cal.com renders the button inside an element with data-cal-namespace
+    return document.querySelector('[data-cal-namespace="10min"]');
+  }
+
+  // Find the hero section or page-hero (inner pages use .page-hero)
+  const hero = document.querySelector('.hero') || document.querySelector('.page-hero');
+  if (!hero) return; // No hero on this page, always show button
+
+  // Determine the threshold: bottom of hero section
+  function getHeroBottom() {
+    return hero.getBoundingClientRect().bottom + window.scrollY;
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const btn = getCalButton();
+      if (btn) {
+        const heroBottom = getHeroBottom();
+        if (window.scrollY < heroBottom - 200) {
+          btn.classList.add('cal-hidden');
+        } else {
+          btn.classList.remove('cal-hidden');
+        }
+      }
+      ticking = false;
+    });
+  }
+
+  // Run on scroll + initially after a short delay (Cal.com loads async)
+  window.addEventListener('scroll', onScroll, { passive: true });
+  setTimeout(() => {
+    const btn = getCalButton();
+    if (btn) btn.classList.add('cal-hidden'); // Start hidden if hero is visible
+    onScroll();
+  }, 1500);
+})();
